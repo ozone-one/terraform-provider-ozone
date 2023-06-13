@@ -6,6 +6,8 @@ import (
 	"github.com/ozone-one/terraform-provider-ozone/tf"
 )
 
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs --provider-name=ozone
+
 func main() {
 	opts := &plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {
