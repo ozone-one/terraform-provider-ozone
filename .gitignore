@@ -1,0 +1,5 @@
+bin/
+*.log
+*.tfstate
+*.tfstate.backup
+example/env.sh
