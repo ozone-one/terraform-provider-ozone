@@ -22,24 +22,18 @@ type CreateReleaseRunRequest struct {
 	// name
 	Name string `json:"name,omitempty"`
 
+	// params
+	Params []*ReleaseParam `json:"params"`
+
 	// release ID
 	ReleaseID string `json:"releaseID,omitempty"`
-
-	// steps
-	Steps []*ReleaseRunStep `json:"steps"`
-
-	// trigger resource ID
-	TriggerResourceID string `json:"triggerResourceID,omitempty"`
-
-	// trigger resource kind
-	TriggerResourceKind string `json:"triggerResourceKind,omitempty"`
 }
 
 // Validate validates this create release run request
 func (m *CreateReleaseRunRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateSteps(formats); err != nil {
+	if err := m.validateParams(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -49,22 +43,22 @@ func (m *CreateReleaseRunRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *CreateReleaseRunRequest) validateSteps(formats strfmt.Registry) error {
-	if swag.IsZero(m.Steps) { // not required
+func (m *CreateReleaseRunRequest) validateParams(formats strfmt.Registry) error {
+	if swag.IsZero(m.Params) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.Steps); i++ {
-		if swag.IsZero(m.Steps[i]) { // not required
+	for i := 0; i < len(m.Params); i++ {
+		if swag.IsZero(m.Params[i]) { // not required
 			continue
 		}
 
-		if m.Steps[i] != nil {
-			if err := m.Steps[i].Validate(formats); err != nil {
+		if m.Params[i] != nil {
+			if err := m.Params[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("steps" + "." + strconv.Itoa(i))
+					return ve.ValidateName("params" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("steps" + "." + strconv.Itoa(i))
+					return ce.ValidateName("params" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -79,7 +73,7 @@ func (m *CreateReleaseRunRequest) validateSteps(formats strfmt.Registry) error {
 func (m *CreateReleaseRunRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateSteps(ctx, formats); err != nil {
+	if err := m.contextValidateParams(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -89,16 +83,16 @@ func (m *CreateReleaseRunRequest) ContextValidate(ctx context.Context, formats s
 	return nil
 }
 
-func (m *CreateReleaseRunRequest) contextValidateSteps(ctx context.Context, formats strfmt.Registry) error {
+func (m *CreateReleaseRunRequest) contextValidateParams(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.Steps); i++ {
+	for i := 0; i < len(m.Params); i++ {
 
-		if m.Steps[i] != nil {
-			if err := m.Steps[i].ContextValidate(ctx, formats); err != nil {
+		if m.Params[i] != nil {
+			if err := m.Params[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("steps" + "." + strconv.Itoa(i))
+					return ve.ValidateName("params" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("steps" + "." + strconv.Itoa(i))
+					return ce.ValidateName("params" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

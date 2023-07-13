@@ -27,6 +27,9 @@ type AppReleaseStep struct {
 	// name
 	Name string `json:"name,omitempty"`
 
+	// pipeline
+	Pipeline *ReleaseRunPipelineStep `json:"pipeline,omitempty"`
+
 	// run after
 	RunAfter []string `json:"runAfter"`
 
@@ -45,6 +48,10 @@ func (m *AppReleaseStep) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateJiraApproval(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePipeline(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -73,6 +80,25 @@ func (m *AppReleaseStep) validateJiraApproval(formats strfmt.Registry) error {
 				return ve.ValidateName("jiraApproval")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("jiraApproval")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *AppReleaseStep) validatePipeline(formats strfmt.Registry) error {
+	if swag.IsZero(m.Pipeline) { // not required
+		return nil
+	}
+
+	if m.Pipeline != nil {
+		if err := m.Pipeline.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("pipeline")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("pipeline")
 			}
 			return err
 		}
@@ -127,6 +153,10 @@ func (m *AppReleaseStep) ContextValidate(ctx context.Context, formats strfmt.Reg
 		res = append(res, err)
 	}
 
+	if err := m.contextValidatePipeline(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSlackApproval(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -149,6 +179,22 @@ func (m *AppReleaseStep) contextValidateJiraApproval(ctx context.Context, format
 				return ve.ValidateName("jiraApproval")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("jiraApproval")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *AppReleaseStep) contextValidatePipeline(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Pipeline != nil {
+		if err := m.Pipeline.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("pipeline")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("pipeline")
 			}
 			return err
 		}

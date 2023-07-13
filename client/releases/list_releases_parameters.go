@@ -98,6 +98,12 @@ type ListReleasesParams struct {
 	*/
 	ApplicationID *string
 
+	/* NameSlug.
+
+	   find by release name
+	*/
+	NameSlug *string
+
 	/* Q.
 
 	   filter by name
@@ -241,6 +247,17 @@ func (o *ListReleasesParams) SetApplicationID(applicationID *string) {
 	o.ApplicationID = applicationID
 }
 
+// WithNameSlug adds the nameSlug to the list releases params
+func (o *ListReleasesParams) WithNameSlug(nameSlug *string) *ListReleasesParams {
+	o.SetNameSlug(nameSlug)
+	return o
+}
+
+// SetNameSlug adds the nameSlug to the list releases params
+func (o *ListReleasesParams) SetNameSlug(nameSlug *string) {
+	o.NameSlug = nameSlug
+}
+
 // WithQ adds the q to the list releases params
 func (o *ListReleasesParams) WithQ(q *string) *ListReleasesParams {
 	o.SetQ(q)
@@ -378,6 +395,23 @@ func (o *ListReleasesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if qApplicationID != "" {
 
 			if err := r.SetQueryParam("application_id", qApplicationID); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.NameSlug != nil {
+
+		// query param name_slug
+		var qrNameSlug string
+
+		if o.NameSlug != nil {
+			qrNameSlug = *o.NameSlug
+		}
+		qNameSlug := qrNameSlug
+		if qNameSlug != "" {
+
+			if err := r.SetQueryParam("name_slug", qNameSlug); err != nil {
 				return err
 			}
 		}

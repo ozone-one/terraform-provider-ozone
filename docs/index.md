@@ -19,9 +19,8 @@ description: |-
 
 - `api_key` (String)
 - `host` (String)
-- `workspace_id` (String)
 
-NOTE: use env variables to provide these values
-`workspace_id` -> `OZ_WORKSPACE_ID`
-`api_key` -> `OZ_API_KEY`
-`host` -> `OZ_HOST`
+### Optional
+
+- `base_path` (String)
+- `scheme` (String)

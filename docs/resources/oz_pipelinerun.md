@@ -22,7 +22,7 @@ description: |-
 - `env_id` (String)
 - `kind` (String)
 - `pipeline_id` (String)
-- `trigger_params` (List of Object) (see [below for nested schema](#nestedatt--trigger_params))
+- `workspace_id` (String)
 
 ### Optional
 
@@ -38,6 +38,7 @@ description: |-
 - `rollback` (Block List) (see [below for nested schema](#nestedblock--rollback))
 - `secret_injection` (Block List) (see [below for nested schema](#nestedblock--secret_injection))
 - `task_run` (List of Object) (see [below for nested schema](#nestedatt--task_run))
+- `trigger_params` (List of Object) (see [below for nested schema](#nestedatt--trigger_params))
 - `trigger_resource_id` (String)
 - `trigger_resource_kind` (String)
 - `uid` (String)
@@ -48,22 +49,6 @@ description: |-
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-<a id="nestedatt--trigger_params"></a>
-### Nested Schema for `trigger_params`
-
-Required:
-
-- `default` (String)
-- `description` (String)
-- `image_tag_config` (Map of String)
-- `name` (String)
-- `required` (Boolean)
-- `resource_id` (String)
-- `type` (Number)
-- `type_name` (String)
-- `value` (String)
-
 
 <a id="nestedblock--ml_verification"></a>
 ### Nested Schema for `ml_verification`
@@ -109,3 +94,27 @@ Optional:
 
 - `status` (String)
 - `step_name` (String)
+
+
+
+<a id="nestedatt--trigger_params"></a>
+### Nested Schema for `trigger_params`
+
+Optional:
+
+- `default` (String)
+- `description` (String)
+- `image_tag_config` (Set of Object) (see [below for nested schema](#nestedobjatt--trigger_params--image_tag_config))
+- `name` (String)
+- `required` (Boolean)
+- `resource_id` (String)
+- `type` (Number)
+- `type_name` (String)
+- `value` (String)
+
+<a id="nestedobjatt--trigger_params--image_tag_config"></a>
+### Nested Schema for `trigger_params.image_tag_config`
+
+Optional:
+
+- `pick_latest_branch_commit` (Boolean)

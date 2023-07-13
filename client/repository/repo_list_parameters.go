@@ -104,6 +104,12 @@ type RepoListParams struct {
 	*/
 	Name *string
 
+	/* NameSlug.
+
+	   find by repository name
+	*/
+	NameSlug *string
+
 	/* Q.
 
 	   query keyword filter
@@ -246,6 +252,17 @@ func (o *RepoListParams) SetName(name *string) {
 	o.Name = name
 }
 
+// WithNameSlug adds the nameSlug to the repo list params
+func (o *RepoListParams) WithNameSlug(nameSlug *string) *RepoListParams {
+	o.SetNameSlug(nameSlug)
+	return o
+}
+
+// SetNameSlug adds the nameSlug to the repo list params
+func (o *RepoListParams) SetNameSlug(nameSlug *string) {
+	o.NameSlug = nameSlug
+}
+
 // WithQ adds the q to the repo list params
 func (o *RepoListParams) WithQ(q *string) *RepoListParams {
 	o.SetQ(q)
@@ -378,6 +395,23 @@ func (o *RepoListParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regi
 		if qName != "" {
 
 			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.NameSlug != nil {
+
+		// query param name_slug
+		var qrNameSlug string
+
+		if o.NameSlug != nil {
+			qrNameSlug = *o.NameSlug
+		}
+		qNameSlug := qrNameSlug
+		if qNameSlug != "" {
+
+			if err := r.SetQueryParam("name_slug", qNameSlug); err != nil {
 				return err
 			}
 		}

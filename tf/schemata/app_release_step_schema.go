@@ -1,6 +1,8 @@
 package schemata
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/ozone-one/terraform-provider-ozone/models"
 )
@@ -19,8 +21,9 @@ func AppReleaseStepSchema() map[string]*schema.Schema {
 			Elem: &schema.Resource{
 				Schema: ReleaseRunJiraApprovalStepSchema(),
 			},
-			Optional: true,
-			ForceNew: true,
+			Optional:   true,
+			ForceNew:   true,
+			ConfigMode: schema.SchemaConfigModeAttr,
 		},
 
 		"name": {
@@ -30,11 +33,9 @@ func AppReleaseStepSchema() map[string]*schema.Schema {
 		},
 
 		"run_after": {
-			Type: schema.TypeList, //GoType: []string
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{},
-			},
+			Type:       schema.TypeList, //GoType: []string
 			ConfigMode: schema.SchemaConfigModeAttr,
+			Elem:       &schema.Schema{Type: schema.TypeString},
 			Optional:   true,
 			ForceNew:   true,
 		},
@@ -64,6 +65,15 @@ func AppReleaseStepSchema() map[string]*schema.Schema {
 			Optional:   true,
 			ForceNew:   true,
 		},
+		"pipeline": {
+			Type: schema.TypeSet, //GoType: ReleaseRunPipelineStep
+			Elem: &schema.Resource{
+				Schema: ReleaseRunPipelineStepSchema(),
+			},
+			ConfigMode: schema.SchemaConfigModeAttr,
+			Optional:   true,
+			ForceNew:   true,
+		},
 	}
 }
 
@@ -79,9 +89,10 @@ func SetAppReleaseStepResourceData(d *schema.ResourceData, m *models.AppReleaseS
 }
 
 // Iterate throught and update the AppReleaseStep resource data within a pagination response (typically defined in the items array field) retrieved from a READ operation for multiple LM resources
-func SetAppReleaseStepSubResourceData(m []*models.AppReleaseStep) (d []*map[string]interface{}) {
+func SetAppReleaseStepSubResourceData(m []*models.AppReleaseStep) (result []interface{}) {
 	for _, appReleaseStep := range m {
 		if appReleaseStep != nil {
+			log.Printf("[DEBUG] Updating app_release_step subresource data for: %s", appReleaseStep.Name)
 			properties := make(map[string]interface{})
 			properties["description"] = appReleaseStep.Description
 			properties["jira_approval"] = SetReleaseRunJiraApprovalStepSubResourceData([]*models.ReleaseRunJiraApprovalStep{appReleaseStep.JiraApproval})
@@ -90,7 +101,10 @@ func SetAppReleaseStepSubResourceData(m []*models.AppReleaseStep) (d []*map[stri
 			properties["slack_approval"] = SetReleaseRunSlackApprovalStepSubResourceData([]*models.ReleaseRunSlackApprovalStep{appReleaseStep.SlackApproval})
 			properties["type_id"] = appReleaseStep.TypeID
 			properties["workspaces"] = SetMongoResourceWorkspacesSubResourceData([]*models.MongoResourceWorkspaces{appReleaseStep.Workspaces})
-			d = append(d, &properties)
+			if appReleaseStep.Pipeline != nil {
+				properties["pipeline"] = SetReleaseRunPipelineStepSubResourceData([]*models.ReleaseRunPipelineStep{appReleaseStep.Pipeline})
+			}
+			result = append(result, &properties)
 		}
 	}
 	return

@@ -68,8 +68,9 @@ func ReleaseRunSchema() map[string]*schema.Schema {
 			Elem: &schema.Resource{
 				Schema: ReleaseDetailsSchema(),
 			},
-			Optional: true,
-			ForceNew: true,
+			Optional:   true,
+			ForceNew:   true,
+			ConfigMode: schema.SchemaConfigModeAttr,
 		},
 
 		"status": {
@@ -78,14 +79,14 @@ func ReleaseRunSchema() map[string]*schema.Schema {
 				Schema: ReleaseRunStatusSchema(),
 			},
 			ConfigMode: schema.SchemaConfigModeAttr,
-			Optional:   true,
+			Computed:   true,
 			ForceNew:   true,
 		},
 
-		"steps": {
+		"params": {
 			Type: schema.TypeList, //GoType: []*ReleaseRunStep
 			Elem: &schema.Resource{
-				Schema: ReleaseRunStepSchema(),
+				Schema: ReleaseParamSchema(),
 			},
 			ConfigMode: schema.SchemaConfigModeAttr,
 			Required:   true,
@@ -137,6 +138,11 @@ func ReleaseRunSchema() map[string]*schema.Schema {
 			Required: true,
 			ForceNew: true,
 		},
+		"workspace_id": {
+			Type:     schema.TypeString,
+			Required: true,
+			ForceNew: true,
+		},
 	}
 }
 
@@ -157,7 +163,8 @@ func SetReleaseRunResourceData(d *schema.ResourceData, m *models.ReleaseRun) {
 	}
 	d.Set("release", SetReleaseDetailsSubResourceData([]*models.ReleaseDetails{m.Release}))
 	d.Set("status", SetReleaseRunStatusSubResourceData([]*models.ReleaseRunStatus{m.Status}))
-	d.Set("steps", SetReleaseRunStepSubResourceData(m.Steps))
+	//d.Set("steps", SetReleaseRunStepSubResourceData(m.Steps))
+	//d.Set("params", SetReleaseParamSubResourceData(m.Params))
 	d.Set("trigger_resource_id", m.TriggerResourceID)
 	d.Set("trigger_resource_kind", m.TriggerResourceKind)
 	d.Set("updated_at", m.UpdatedAt)

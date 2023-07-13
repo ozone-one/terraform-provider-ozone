@@ -46,8 +46,11 @@ func SetTaskRunResourceData(m interface{}) (result []interface{}) {
 	for _, taskRun := range pipelineRun.Status.TaskRuns {
 		properties := make(map[string]interface{})
 		properties["name"] = taskRun.PipelineTaskName
-		properties["status"] = taskRun.Status.Conditions[0].Reason
 		properties["steps"] = SetStepResourceDataArray(taskRun.Status.Steps)
+		if len(taskRun.Status.Conditions) > 0 {
+			properties["status"] = taskRun.Status.Conditions[0].Reason
+		}
+
 		result = append(result, properties)
 	}
 	return

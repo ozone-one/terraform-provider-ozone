@@ -40,8 +40,8 @@ func DataResourceReleaserun() *schema.Resource {
 }
 
 func releaseRunGetByID(ctx context.Context, d *schema.ResourceData,m interface{},id string) diag.Diagnostics {
-
-	params := releaserun.NewGetReleaseRunByIDParams()
+	workspaceID := d.Get("workspace_id").(string)
+	params := releaserun.NewGetReleaseRunByIDParams().WithXWorkspaceID(workspaceID)
 	params.SetID(id)
 
 	client := m.(*client.AppBeMasterAPI)
@@ -64,14 +64,15 @@ func releaseRunGetByID(ctx context.Context, d *schema.ResourceData,m interface{}
 func releaseRunCreate(ctx context.Context, d *schema.ResourceData,m interface{}) diag.Diagnostics {
 
 	model := schemata.CreateReleaseRunRequestModel(d)
-	params := releaserun.NewReleaseRunCreateParams().WithRequest(model)
+	workspaceID := d.Get("workspace_id").(string)
+	params := releaserun.NewReleaseRunCreateParams().WithRequest(model).WithXWorkspaceID(workspaceID)
 
 	client := m.(*client.AppBeMasterAPI)
 
 	resp, err := client.Releaserun.ReleaseRunCreate(params)
 	log.Printf("[TRACE] response: %v", resp)
 	if err != nil {
-		log.Printf("failed to make api request error: %+v,params:= %+v", err.Error(),model.Steps[0])
+		log.Printf("failed to make api request error: %+v", err.Error())
 		return diag.Errorf("unexpected: %s", err)
 	}
 

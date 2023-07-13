@@ -22,10 +22,20 @@ func CreateReleaseRunRequestSchema() map[string]*schema.Schema {
 			ForceNew: true,
 		},
 
-		"steps": {
-			Type: schema.TypeList, //GoType: []*ReleaseRunStep
+		// "steps": {
+		// 	Type: schema.TypeList, //GoType: []*ReleaseRunStep
+		// 	Elem: &schema.Resource{
+		// 		Schema: ReleaseRunStepSchema(),
+		// 	},
+		// 	ConfigMode: schema.SchemaConfigModeAttr,
+		// 	Optional:   true,
+		// 	ForceNew:   true,
+		// },
+
+		"params": {
+			Type: schema.TypeList, //GoType: []*ReleaseParam
 			Elem: &schema.Resource{
-				Schema: ReleaseRunStepSchema(),
+				Schema: ReleaseParamSchema(),
 			},
 			ConfigMode: schema.SchemaConfigModeAttr,
 			Optional:   true,
@@ -54,9 +64,10 @@ func CreateReleaseRunRequestSchema() map[string]*schema.Schema {
 func SetCreateReleaseRunRequestResourceData(d *schema.ResourceData, m *models.CreateReleaseRunRequest) {
 	d.Set("name", m.Name)
 	d.Set("release_id", m.ReleaseID)
-	d.Set("steps", SetReleaseRunStepSubResourceData(m.Steps))
-	d.Set("trigger_resource_id", m.TriggerResourceID)
-	d.Set("trigger_resource_kind", m.TriggerResourceKind)
+	//d.Set("steps", SetReleaseRunStepSubResourceData(m.Steps))
+	// d.Set("trigger_resource_id", m.TriggerResourceID)
+	// d.Set("trigger_resource_kind", m.TriggerResourceKind)
+	d.Set("params", SetReleaseParamSubResourceData(m.Params))
 }
 
 // Iterate throught and update the CreateReleaseRunRequest resource data within a pagination response (typically defined in the items array field) retrieved from a READ operation for multiple LM resources
@@ -66,9 +77,10 @@ func SetCreateReleaseRunRequestSubResourceData(m []*models.CreateReleaseRunReque
 			properties := make(map[string]interface{})
 			properties["name"] = createReleaseRunRequest.Name
 			properties["release_id"] = createReleaseRunRequest.ReleaseID
-			properties["steps"] = SetReleaseRunStepSubResourceData(createReleaseRunRequest.Steps)
-			properties["trigger_resource_id"] = createReleaseRunRequest.TriggerResourceID
-			properties["trigger_resource_kind"] = createReleaseRunRequest.TriggerResourceKind
+			//properties["steps"] = SetReleaseRunStepSubResourceData(createReleaseRunRequest.Steps)
+			properties["params"] = SetReleaseParamSubResourceData(createReleaseRunRequest.Params)
+			// properties["trigger_resource_id"] = createReleaseRunRequest.TriggerResourceID
+			// properties["trigger_resource_kind"] = createReleaseRunRequest.TriggerResourceKind
 			d = append(d, &properties)
 		}
 	}
@@ -82,24 +94,28 @@ func CreateReleaseRunRequestModel(d *schema.ResourceData) *models.CreateReleaseR
 	name := d.Get("name").(string)
 	releaseID := d.Get("release_id").(string)
 	//steps := d.Get("steps").([]*models.ReleaseRunStep)
-	triggerResourceID := d.Get("trigger_resource_id").(string)
-	triggerResourceKind := d.Get("trigger_resource_kind").(string)
 	// get release run steps
-	steps := make([]*models.ReleaseRunStep, 0)
+	releaseParams := make([]*models.ReleaseParam, 0)
 
-	if v, ok := d.GetOk("steps"); ok {
-		for _, step := range v.([]interface{}) {
-			stepModel := stepParams(step)
-			steps = append(steps, &stepModel)
+	if v, ok := d.GetOk("params"); ok {
+		for _, releaseParam := range v.([]interface{}) {
+			params := releaseParam.(map[string]interface{})["params"]
+			pipelineID := releaseParam.(map[string]interface{})["pipeline_id"].(string)
+			var item = models.ReleaseParam{
+				PipelineID: pipelineID,
+				Params:     make([]*models.PipelineParam, 0),
+			}
+			for _, v := range params.([]interface{}) {
+				item.Params = append(item.Params, pipelineParams(v))
+			}
+			releaseParams = append(releaseParams, &item)
 		}
 	}
 
 	return &models.CreateReleaseRunRequest{
-		Name:                name,
-		ReleaseID:           releaseID,
-		Steps:               steps,
-		TriggerResourceID:   triggerResourceID,
-		TriggerResourceKind: triggerResourceKind,
+		Name:      name,
+		ReleaseID: releaseID,
+		Params:    releaseParams,
 	}
 }
 

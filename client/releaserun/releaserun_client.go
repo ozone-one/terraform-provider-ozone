@@ -92,7 +92,7 @@ func (a *Client) ListReleaseRuns(params *ListReleaseRunsParams) (*ListReleaseRun
 }
 
 /*
-ReleaseRunCreate gives all applications
+ReleaseRunCreate creates a new releaserun
 
 gives release run by id
 */
