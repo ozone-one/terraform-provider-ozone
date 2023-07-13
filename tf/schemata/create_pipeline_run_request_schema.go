@@ -236,12 +236,31 @@ func pipelineParams(v interface{}) *models.PipelineParam {
 		item.Required = v.(map[string]interface{})["required"].(bool)
 	}
 	if val := v.(map[string]interface{})["image_tag_config"]; val != nil {
-		if plbc := val.(map[string]interface{})["pick_latest_branch_commit"]; plbc != nil {
-			ok, _ := strconv.ParseBool(plbc.(string))
-			item.ImageTagConfig = &models.ImageTagConfig{
-				PickLatestBranchCommit: ok,
+		if plbc, ok := val.([]interface{}); ok {
+			for _, v := range plbc {
+				if v.(map[string]interface{})["pick_latest_branch_commit"] != nil {
+					ok, _ := strconv.ParseBool(v.(map[string]interface{})["pick_latest_branch_commit"].(string))
+					item.ImageTagConfig = &models.ImageTagConfig{
+						PickLatestBranchCommit: ok,
+					}
+				}
+			}
+		} else {
+			if plbc := val.(*schema.Set); plbc != nil {
+				items := plbc.List()
+				if len(items) > 0 {
+					item.ImageTagConfig = &models.ImageTagConfig{
+						PickLatestBranchCommit: items[0].(map[string]interface{})["pick_latest_branch_commit"].(bool),
+					}
+				}
 			}
 		}
+		// if plbc := val.(map[string]interface{})["pick_latest_branch_commit"]; plbc != nil {
+		// 	ok, _ := strconv.ParseBool(plbc.(string))
+		// 	item.ImageTagConfig = &models.ImageTagConfig{
+		// 		PickLatestBranchCommit: ok,
+		// 	}
+		// }
 	}
 	return &item
 }

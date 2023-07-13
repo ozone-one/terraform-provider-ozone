@@ -43,6 +43,12 @@ func (o *ReleaseRunCreateReader) ReadResponse(response runtime.ClientResponse, c
 			return nil, err
 		}
 		return nil, result
+	case 422:
+		result := NewReleaseRunCreateUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 500:
 		result := NewReleaseRunCreateInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -156,6 +162,37 @@ func (o *ReleaseRunCreateNotFound) GetPayload() interface{} {
 }
 
 func (o *ReleaseRunCreateNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewReleaseRunCreateUnprocessableEntity creates a ReleaseRunCreateUnprocessableEntity with default headers values
+func NewReleaseRunCreateUnprocessableEntity() *ReleaseRunCreateUnprocessableEntity {
+	return &ReleaseRunCreateUnprocessableEntity{}
+}
+
+/*
+ReleaseRunCreateUnprocessableEntity describes a response with status code 422, with default header values.
+
+Unprocessable Entity
+*/
+type ReleaseRunCreateUnprocessableEntity struct {
+	Payload interface{}
+}
+
+func (o *ReleaseRunCreateUnprocessableEntity) Error() string {
+	return fmt.Sprintf("[POST /admin/releaserun][%d] releaseRunCreateUnprocessableEntity  %+v", 422, o.Payload)
+}
+func (o *ReleaseRunCreateUnprocessableEntity) GetPayload() interface{} {
+	return o.Payload
+}
+
+func (o *ReleaseRunCreateUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {

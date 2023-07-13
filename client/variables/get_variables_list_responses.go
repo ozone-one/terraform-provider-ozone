@@ -70,13 +70,13 @@ type GetVariablesListOK struct {
 	 */
 	XTotalCount int64
 
-	Payload []*models.VariableListView
+	Payload *models.VariableList
 }
 
 func (o *GetVariablesListOK) Error() string {
 	return fmt.Sprintf("[GET /admin/variables][%d] getVariablesListOK  %+v", 200, o.Payload)
 }
-func (o *GetVariablesListOK) GetPayload() []*models.VariableListView {
+func (o *GetVariablesListOK) GetPayload() *models.VariableList {
 	return o.Payload
 }
 
@@ -93,8 +93,10 @@ func (o *GetVariablesListOK) readResponse(response runtime.ClientResponse, consu
 		o.XTotalCount = valxTotalCount
 	}
 
+	o.Payload = new(models.VariableList)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

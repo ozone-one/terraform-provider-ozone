@@ -104,6 +104,12 @@ type ListRegistryParams struct {
 	*/
 	Name *string
 
+	/* NameSlug.
+
+	   find by registry name
+	*/
+	NameSlug *string
+
 	/* Q.
 
 	   query keyword filter
@@ -246,6 +252,17 @@ func (o *ListRegistryParams) SetName(name *string) {
 	o.Name = name
 }
 
+// WithNameSlug adds the nameSlug to the list registry params
+func (o *ListRegistryParams) WithNameSlug(nameSlug *string) *ListRegistryParams {
+	o.SetNameSlug(nameSlug)
+	return o
+}
+
+// SetNameSlug adds the nameSlug to the list registry params
+func (o *ListRegistryParams) SetNameSlug(nameSlug *string) {
+	o.NameSlug = nameSlug
+}
+
 // WithQ adds the q to the list registry params
 func (o *ListRegistryParams) WithQ(q *string) *ListRegistryParams {
 	o.SetQ(q)
@@ -378,6 +395,23 @@ func (o *ListRegistryParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if qName != "" {
 
 			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.NameSlug != nil {
+
+		// query param name_slug
+		var qrNameSlug string
+
+		if o.NameSlug != nil {
+			qrNameSlug = *o.NameSlug
+		}
+		qNameSlug := qrNameSlug
+		if qNameSlug != "" {
+
+			if err := r.SetQueryParam("name_slug", qNameSlug); err != nil {
 				return err
 			}
 		}

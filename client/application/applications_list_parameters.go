@@ -92,6 +92,12 @@ type ApplicationsListParams struct {
 	*/
 	Start *int64
 
+	/* MicroserviceSlug.
+
+	   microservice slug
+	*/
+	MicroserviceSlug *string
+
 	/* Q.
 
 	   filter by name
@@ -224,6 +230,17 @@ func (o *ApplicationsListParams) SetStart(start *int64) {
 	o.Start = start
 }
 
+// WithMicroserviceSlug adds the microserviceSlug to the applications list params
+func (o *ApplicationsListParams) WithMicroserviceSlug(microserviceSlug *string) *ApplicationsListParams {
+	o.SetMicroserviceSlug(microserviceSlug)
+	return o
+}
+
+// SetMicroserviceSlug adds the microserviceSlug to the applications list params
+func (o *ApplicationsListParams) SetMicroserviceSlug(microserviceSlug *string) {
+	o.MicroserviceSlug = microserviceSlug
+}
+
 // WithQ adds the q to the applications list params
 func (o *ApplicationsListParams) WithQ(q *string) *ApplicationsListParams {
 	o.SetQ(q)
@@ -344,6 +361,23 @@ func (o *ApplicationsListParams) WriteToRequest(r runtime.ClientRequest, reg str
 		if qStart != "" {
 
 			if err := r.SetQueryParam("_start", qStart); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.MicroserviceSlug != nil {
+
+		// query param microservice_slug
+		var qrMicroserviceSlug string
+
+		if o.MicroserviceSlug != nil {
+			qrMicroserviceSlug = *o.MicroserviceSlug
+		}
+		qMicroserviceSlug := qrMicroserviceSlug
+		if qMicroserviceSlug != "" {
+
+			if err := r.SetQueryParam("microservice_slug", qMicroserviceSlug); err != nil {
 				return err
 			}
 		}

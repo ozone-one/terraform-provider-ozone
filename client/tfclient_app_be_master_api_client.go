@@ -12,9 +12,12 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/ozone-one/terraform-provider-ozone/client/application"
+	"github.com/ozone-one/terraform-provider-ozone/client/environment"
+	"github.com/ozone-one/terraform-provider-ozone/client/pipeline"
 	"github.com/ozone-one/terraform-provider-ozone/client/pipelinerun"
 	"github.com/ozone-one/terraform-provider-ozone/client/pipelinerunlog"
 	"github.com/ozone-one/terraform-provider-ozone/client/registry"
+	"github.com/ozone-one/terraform-provider-ozone/client/cluster"
 	"github.com/ozone-one/terraform-provider-ozone/client/releaserun"
 	"github.com/ozone-one/terraform-provider-ozone/client/releases"
 	"github.com/ozone-one/terraform-provider-ozone/client/repository"
@@ -33,7 +36,7 @@ const (
 )
 
 // DefaultSchees are the default schemes found in Meta (info) section of spec file
-var DefaultSchemes = []string{"https"}
+var DefaultSchemes = []string{"https","http"}
 
 // Config information for AppBeMasterAPI client
 type Config struct {
@@ -68,13 +71,29 @@ func (c *Config) SetAccountDomain(accountDomain *string) {
 	c.TransportCfg = c.TransportCfg.WithHost(domain)
 }
 
+// SetBasePath for the client Config
+func (c *Config) SetBasePath(basePath *string) {
+	if c.TransportCfg == nil {
+		c.TransportCfg = DefaultTransportConfig()
+	}
+	path := *basePath
+	c.TransportCfg = c.TransportCfg.WithBasePath(path)
+}
+// SetSchemes for the client Config
+func (c *Config) SetSchemes(schemes []string) {
+	if c.TransportCfg == nil {
+		c.TransportCfg = DefaultTransportConfig()
+	}
+	c.TransportCfg = c.TransportCfg.WithSchemes(schemes)
+}
+
 // New creates a new app be master API client
 func New(c *Config) *AppBeMasterAPI {
 	transport := httptransport.New(c.TransportCfg.Host, c.TransportCfg.BasePath, c.TransportCfg.Schemes)
 
 	cli := new(AppBeMasterAPI)
 	cli.Transport = transport
-	authInfo := LMv1Auth(*c.AccessKey, *c.WorkspaceID)
+	authInfo := LMv1Auth(*c.AccessKey)
 	cli.AuthInfoWriter = authInfo
 
 	cli.Application = application.New(transport, strfmt.Default, authInfo)
@@ -97,6 +116,11 @@ func New(c *Config) *AppBeMasterAPI {
 
 	cli.Workspace = workspace.New(transport, strfmt.Default, authInfo)
 
+	cli.Pipeline = pipeline.New(transport, strfmt.Default, authInfo)
+
+	cli.Environment = environment.New(transport,strfmt.Default,authInfo)
+
+	cli.Cluster	= cluster.New(transport,strfmt.Default,authInfo)
 	return cli
 }
 
@@ -161,6 +185,12 @@ type AppBeMasterAPI struct {
 
 	Workspace *workspace.Client
 
+	Pipeline *pipeline.Client
+
+	Environment *environment.Client
+
+	Cluster *cluster.Client
+
 	AuthInfoWriter runtime.ClientAuthInfoWriter
 	Transport      runtime.ClientTransport
 }
@@ -188,15 +218,21 @@ func (c *AppBeMasterAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Variables.SetTransport(transport)
 
 	c.Workspace.SetTransport(transport)
+	
+	c.Pipeline.SetTransport(transport)
+
+	c.Environment.SetTransport(transport)
+	
+	c.Cluster.SetTransport(transport)
 
 }
 
 // TODO: See if there is a way to move this out of Facade Template and into Main or Provider templates
-func LMv1Auth(accessKey, workspaceID string) runtime.ClientAuthInfoWriter {
+func LMv1Auth(accessKey string) runtime.ClientAuthInfoWriter {
 	return runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
 
 		r.SetHeaderParam("authorization", accessKey)
-		r.SetHeaderParam("x-workspace-id", workspaceID)
+		//r.SetHeaderParam("x-workspace-id", workspaceID)
 		//TODO Consider moving this up to terraform template level of config
 		return r.SetHeaderParam("X-version", "3")
 	})

@@ -88,7 +88,7 @@ func GithubComOzoneCloudCommonEntitiesApplicationApplicationSchema() map[string]
 
 		"name": {
 			Type:     schema.TypeString,
-			Optional: true,
+			Required: true,
 			ForceNew: true,
 		},
 
@@ -136,6 +136,10 @@ func GithubComOzoneCloudCommonEntitiesApplicationApplicationSchema() map[string]
 			ConfigMode: schema.SchemaConfigModeAttr,
 			Optional:   true,
 			ForceNew:   true,
+		},
+		"workspace_id": {
+			Type:     schema.TypeString,
+			Required: true,
 		},
 	}
 }

@@ -60,7 +60,7 @@ func AppReleaseSchema() map[string]*schema.Schema {
 
 		"name": {
 			Type:     schema.TypeString,
-			Optional: true,
+			Required: true,
 			ForceNew: true,
 		},
 
@@ -89,6 +89,12 @@ func AppReleaseSchema() map[string]*schema.Schema {
 		"updated_by_name": {
 			Type:     schema.TypeString,
 			Optional: true,
+			ForceNew: true,
+		},
+
+		"workspace_id": {
+			Type:     schema.TypeString,
+			Required: true,
 			ForceNew: true,
 		},
 

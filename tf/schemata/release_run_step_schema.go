@@ -14,11 +14,6 @@ func ReleaseRunStepSchema() map[string]*schema.Schema {
 			ForceNew: true,
 		},
 
-		// "id": {
-		// 	Type:     schema.TypeString,
-		// 	Computed: true,
-		// },
-
 		"jira_approval": {
 			Type: schema.TypeList, //GoType: ReleaseRunJiraApprovalStep
 			Elem: &schema.Resource{
@@ -71,7 +66,7 @@ func ReleaseRunStepSchema() map[string]*schema.Schema {
 				Schema: AppReleaseStepStatusSchema(),
 			},
 			ConfigMode: schema.SchemaConfigModeAttr,
-			Optional:   true,
+			Computed:   true,
 			ForceNew:   true,
 		},
 
@@ -79,6 +74,7 @@ func ReleaseRunStepSchema() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Optional: true,
 			ForceNew: true,
+			Default:  0,
 		},
 
 		"type_id": {

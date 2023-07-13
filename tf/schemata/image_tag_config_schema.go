@@ -22,7 +22,7 @@ func SetImageTagConfigResourceData(d *schema.ResourceData, m *models.ImageTagCon
 }
 
 // Iterate throught and update the ImageTagConfig resource data within a pagination response (typically defined in the items array field) retrieved from a READ operation for multiple LM resources
-func SetImageTagConfigSubResourceData(m []*models.ImageTagConfig) (d []*map[string]interface{}) {
+func SetImageTagConfigSubResourceData(m []*models.ImageTagConfig) (d []interface{}) {
 	for _, imageTagConfig := range m {
 		if imageTagConfig != nil {
 			properties := make(map[string]interface{})

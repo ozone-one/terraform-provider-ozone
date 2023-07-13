@@ -42,7 +42,8 @@ func DataResourcePipelinerun() *schema.Resource {
 func pipelineRunCreate(ctx context.Context, d *schema.ResourceData,m interface{}) diag.Diagnostics {
 
 	model := schemata.CreatePipelineRunRequestModel(d)
-	params := pipelinerun.NewPipelineRunCreateParams().WithRequest(model)
+	workspaceID := d.Get("workspace_id").(string)
+	params := pipelinerun.NewPipelineRunCreateParams().WithRequest(model).WithXWorkspaceID(workspaceID)
 
 	client := m.(*client.AppBeMasterAPI)
 

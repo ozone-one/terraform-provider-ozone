@@ -61,7 +61,7 @@ func SetReleaseRunPipelineStepResourceData(d *schema.ResourceData, m *models.Rel
 }
 
 // Iterate throught and update the ReleaseRunPipelineStep resource data within a pagination response (typically defined in the items array field) retrieved from a READ operation for multiple LM resources
-func SetReleaseRunPipelineStepSubResourceData(m []*models.ReleaseRunPipelineStep) (d []*map[string]interface{}) {
+func SetReleaseRunPipelineStepSubResourceData(m []*models.ReleaseRunPipelineStep) (d []interface{}) {
 	for _, releaseRunPipelineStep := range m {
 		if releaseRunPipelineStep != nil {
 			properties := make(map[string]interface{})

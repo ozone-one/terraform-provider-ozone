@@ -17,8 +17,9 @@ description: |-
 
 ### Required
 
+- `params` (List of Object) (see [below for nested schema](#nestedatt--params))
 - `release_id` (String)
-- `steps` (List of Object) (see [below for nested schema](#nestedatt--steps))
+- `workspace_id` (String)
 
 ### Optional
 
@@ -29,8 +30,7 @@ description: |-
 - `created_by_name` (String)
 - `deleted_at` (String)
 - `name` (String)
-- `release` (Block List) (see [below for nested schema](#nestedblock--release))
-- `status` (List of Object) (see [below for nested schema](#nestedatt--status))
+- `release` (List of Object) (see [below for nested schema](#nestedatt--release))
 - `trigger_resource_id` (String)
 - `trigger_resource_kind` (String)
 - `uid` (String)
@@ -42,54 +42,24 @@ description: |-
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `status` (List of Object) (see [below for nested schema](#nestedatt--status))
 
-<a id="nestedatt--steps"></a>
-### Nested Schema for `steps`
-
-Required:
-
-- `description` (String)
-- `jira_approval` (List of Object) (see [below for nested schema](#nestedobjatt--steps--jira_approval))
-- `name` (String)
-- `pipeline` (List of Object) (see [below for nested schema](#nestedobjatt--steps--pipeline))
-- `run_after` (List of Object) (see [below for nested schema](#nestedobjatt--steps--run_after))
-- `slack_approval` (List of Object) (see [below for nested schema](#nestedobjatt--steps--slack_approval))
-- `status` (List of Object) (see [below for nested schema](#nestedobjatt--steps--status))
-- `timeout` (Number)
-- `type_id` (Number)
-- `workspaces` (List of Object) (see [below for nested schema](#nestedobjatt--steps--workspaces))
-
-<a id="nestedobjatt--steps--jira_approval"></a>
-### Nested Schema for `steps.jira_approval`
+<a id="nestedatt--params"></a>
+### Nested Schema for `params`
 
 Required:
 
-- `issue_key` (String)
-- `project_id` (String)
-- `provider_id` (String)
-- `webhook_id` (String)
-
-
-<a id="nestedobjatt--steps--pipeline"></a>
-### Nested Schema for `steps.pipeline`
-
-Required:
-
-- `application_id` (String)
-- `cluster_id` (String)
-- `env_id` (String)
+- `params` (List of Object) (see [below for nested schema](#nestedobjatt--params--params))
 - `pipeline_id` (String)
-- `timeout` (Number)
-- `trigger_params` (List of Object) (see [below for nested schema](#nestedobjatt--steps--pipeline--trigger_params))
 
-<a id="nestedobjatt--steps--pipeline--trigger_params"></a>
-### Nested Schema for `steps.pipeline.trigger_params`
+<a id="nestedobjatt--params--params"></a>
+### Nested Schema for `params.params`
 
 Required:
 
 - `default` (String)
 - `description` (String)
-- `image_tag_config` (Map of String)
+- `image_tag_config` (Set of Object) (see [below for nested schema](#nestedobjatt--params--params--image_tag_config))
 - `name` (String)
 - `required` (Boolean)
 - `resource_id` (String)
@@ -97,71 +67,22 @@ Required:
 - `type_name` (String)
 - `value` (String)
 
-
-
-<a id="nestedobjatt--steps--run_after"></a>
-### Nested Schema for `steps.run_after`
+<a id="nestedobjatt--params--params--image_tag_config"></a>
+### Nested Schema for `params.params.image_tag_config`
 
 Required:
 
-
-
-<a id="nestedobjatt--steps--slack_approval"></a>
-### Nested Schema for `steps.slack_approval`
-
-Required:
-
-- `callback_id` (String)
-- `ts` (String)
-- `webhook_id` (String)
-
-
-<a id="nestedobjatt--steps--status"></a>
-### Nested Schema for `steps.status`
-
-Required:
-
-- `completion_time` (String)
-- `created_time` (String)
-- `message` (String)
-- `status` (String)
-- `updated_time` (String)
-
-
-<a id="nestedobjatt--steps--workspaces"></a>
-### Nested Schema for `steps.workspaces`
-
-Required:
-
-- `items` (List of Object) (see [below for nested schema](#nestedobjatt--steps--workspaces--items))
-
-<a id="nestedobjatt--steps--workspaces--items"></a>
-### Nested Schema for `steps.workspaces.items`
-
-Required:
+- `pick_latest_branch_commit` (Boolean)
 
 
 
 
-
-<a id="nestedblock--release"></a>
+<a id="nestedatt--release"></a>
 ### Nested Schema for `release`
 
 Optional:
 
 - `name` (String)
-
-
-<a id="nestedatt--status"></a>
-### Nested Schema for `status`
-
-Optional:
-
-- `completion_time` (String)
-- `created_time` (String)
-- `message` (String)
-- `status` (String)
-- `updated_time` (String)
 
 
 <a id="nestedatt--workspaces"></a>
@@ -175,3 +96,17 @@ Optional:
 ### Nested Schema for `workspaces.items`
 
 Optional:
+
+
+
+
+<a id="nestedatt--status"></a>
+### Nested Schema for `status`
+
+Read-Only:
+
+- `completion_time` (String)
+- `created_time` (String)
+- `message` (String)
+- `status` (String)
+- `updated_time` (String)

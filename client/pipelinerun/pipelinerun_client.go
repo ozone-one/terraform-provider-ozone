@@ -122,6 +122,37 @@ func (a *Client) PipelineRunGetByID(params *PipelineRunGetByIDParams) (*Pipeline
 
 }
 
+/*
+ReRunPipelineRun retrieves pipeline run logs
+
+retrieves pipeline run logs
+*/
+func (a *Client) ReRunPipelineRun(params *ReRunPipelineRunParams) (*ReRunPipelineRunOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewReRunPipelineRunParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "re-run-pipeline-run",
+		Method:             "POST",
+		PathPattern:        "/admin/pipelinerun/{pipeline_run_id}/rerun",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ReRunPipelineRunReader{formats: a.formats},
+		AuthInfo:           a.authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ReRunPipelineRunOK), nil
+
+}
+
 // SetTransport changes the transport on the client
 func (a *Client) SetTransport(transport runtime.ClientTransport) {
 	a.transport = transport

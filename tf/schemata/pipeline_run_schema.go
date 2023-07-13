@@ -133,7 +133,7 @@ func PipelineRunSchema() map[string]*schema.Schema {
 				Schema: PipelineParamSchema(),
 			},
 			ConfigMode: schema.SchemaConfigModeAttr,
-			Required:   true,
+			Optional:   true,
 			ForceNew:   true,
 		},
 
@@ -180,6 +180,11 @@ func PipelineRunSchema() map[string]*schema.Schema {
 			Optional:   true,
 			ForceNew:   true,
 			ConfigMode: schema.SchemaConfigModeAttr,
+		},
+		"workspace_id": {
+			Type:     schema.TypeString,
+			Required: true,
+			ForceNew: true,
 		},
 	}
 }

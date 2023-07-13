@@ -66,7 +66,7 @@ func VariableListViewSchema() map[string]*schema.Schema {
 
 		"name": {
 			Type:     schema.TypeString,
-			Optional: true,
+			Required: true,
 			ForceNew: true,
 		},
 
@@ -92,6 +92,10 @@ func VariableListViewSchema() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Optional: true,
 			ForceNew: true,
+		},
+		"workspace_id": {
+			Type:     schema.TypeString,
+			Required: true,
 		},
 	}
 }

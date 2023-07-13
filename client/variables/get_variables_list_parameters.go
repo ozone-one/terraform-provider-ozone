@@ -122,6 +122,12 @@ type GetVariablesListParams struct {
 	*/
 	Name *string
 
+	/* NameSlug.
+
+	   find by variable name
+	*/
+	NameSlug *string
+
 	/* To.
 
 	   to : filter for updated_at. expected format: RFC3339
@@ -291,6 +297,17 @@ func (o *GetVariablesListParams) SetName(name *string) {
 	o.Name = name
 }
 
+// WithNameSlug adds the nameSlug to the get variables list params
+func (o *GetVariablesListParams) WithNameSlug(nameSlug *string) *GetVariablesListParams {
+	o.SetNameSlug(nameSlug)
+	return o
+}
+
+// SetNameSlug adds the nameSlug to the get variables list params
+func (o *GetVariablesListParams) SetNameSlug(nameSlug *string) {
+	o.NameSlug = nameSlug
+}
+
 // WithTo adds the to to the get variables list params
 func (o *GetVariablesListParams) WithTo(to *string) *GetVariablesListParams {
 	o.SetTo(to)
@@ -451,6 +468,23 @@ func (o *GetVariablesListParams) WriteToRequest(r runtime.ClientRequest, reg str
 		if qName != "" {
 
 			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.NameSlug != nil {
+
+		// query param name_slug
+		var qrNameSlug string
+
+		if o.NameSlug != nil {
+			qrNameSlug = *o.NameSlug
+		}
+		qNameSlug := qrNameSlug
+		if qNameSlug != "" {
+
+			if err := r.SetQueryParam("name_slug", qNameSlug); err != nil {
 				return err
 			}
 		}

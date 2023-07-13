@@ -63,7 +63,7 @@ func RegistrySchema() map[string]*schema.Schema {
 
 		"name": {
 			Type:     schema.TypeString,
-			Optional: true,
+			Required: true,
 			ForceNew: true,
 		},
 
@@ -159,6 +159,10 @@ func RegistrySchema() map[string]*schema.Schema {
 			ConfigMode: schema.SchemaConfigModeAttr,
 			Optional:   true,
 			ForceNew:   true,
+		},
+		"workspace_id": {
+			Type:     schema.TypeString,
+			Required: true,
 		},
 	}
 }

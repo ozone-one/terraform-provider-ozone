@@ -11,7 +11,6 @@ func PipelineParamSchema() map[string]*schema.Schema {
 		"default": {
 			Type:     schema.TypeString,
 			Optional: true,
-			ForceNew: true,
 		},
 
 		"description": {
@@ -21,13 +20,12 @@ func PipelineParamSchema() map[string]*schema.Schema {
 		},
 
 		"image_tag_config": {
-			Type: schema.TypeMap, //GoType: ImageTagConfig
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
+			Type: schema.TypeSet, //GoType: ImageTagConfig
+			Elem: &schema.Resource{
+				Schema: ImageTagConfigSchema(),
 			},
 			ConfigMode: schema.SchemaConfigModeAttr,
 			Optional:   true,
-			ForceNew:   true,
 		},
 
 		"name": {
@@ -82,7 +80,7 @@ func SetPipelineParamResourceData(d *schema.ResourceData, m *models.PipelinePara
 }
 
 // Iterate throught and update the PipelineParam resource data within a pagination response (typically defined in the items array field) retrieved from a READ operation for multiple LM resources
-func SetPipelineParamSubResourceData(m []*models.PipelineParam) (d []*map[string]interface{}) {
+func SetPipelineParamSubResourceData(m []*models.PipelineParam) (d []interface{}) {
 	for _, pipelineParam := range m {
 		if pipelineParam != nil {
 			properties := make(map[string]interface{})

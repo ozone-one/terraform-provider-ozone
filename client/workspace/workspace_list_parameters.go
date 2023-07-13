@@ -60,6 +60,13 @@ WorkspaceListParams contains all the parameters to send to the API endpoint
 	Typically these are written to a http.Request.
 */
 type WorkspaceListParams struct {
+
+	/* NameSlug.
+
+	   find by workspace name
+	*/
+	NameSlug *string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -113,6 +120,17 @@ func (o *WorkspaceListParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithNameSlug adds the nameSlug to the workspace list params
+func (o *WorkspaceListParams) WithNameSlug(nameSlug *string) *WorkspaceListParams {
+	o.SetNameSlug(nameSlug)
+	return o
+}
+
+// SetNameSlug adds the nameSlug to the workspace list params
+func (o *WorkspaceListParams) SetNameSlug(nameSlug *string) {
+	o.NameSlug = nameSlug
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *WorkspaceListParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -120,6 +138,23 @@ func (o *WorkspaceListParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
+
+	if o.NameSlug != nil {
+
+		// query param name_slug
+		var qrNameSlug string
+
+		if o.NameSlug != nil {
+			qrNameSlug = *o.NameSlug
+		}
+		qNameSlug := qrNameSlug
+		if qNameSlug != "" {
+
+			if err := r.SetQueryParam("name_slug", qNameSlug); err != nil {
+				return err
+			}
+		}
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

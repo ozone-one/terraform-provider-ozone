@@ -27,7 +27,7 @@ func WorkspaceSchema() map[string]*schema.Schema {
 
 		"name": {
 			Type:     schema.TypeString,
-			Optional: true,
+			Required: true,
 			ForceNew: true,
 		},
 	}

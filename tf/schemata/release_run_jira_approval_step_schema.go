@@ -43,7 +43,7 @@ func SetReleaseRunJiraApprovalStepResourceData(d *schema.ResourceData, m *models
 }
 
 // Iterate throught and update the ReleaseRunJiraApprovalStep resource data within a pagination response (typically defined in the items array field) retrieved from a READ operation for multiple LM resources
-func SetReleaseRunJiraApprovalStepSubResourceData(m []*models.ReleaseRunJiraApprovalStep) (d []*map[string]interface{}) {
+func SetReleaseRunJiraApprovalStepSubResourceData(m []*models.ReleaseRunJiraApprovalStep) (d []interface{}) {
 	for _, releaseRunJiraApprovalStep := range m {
 		if releaseRunJiraApprovalStep != nil {
 			properties := make(map[string]interface{})
